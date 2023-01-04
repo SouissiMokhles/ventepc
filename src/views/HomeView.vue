@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" class="img-thumbnail" src="../assets/logo.png">
+    <img alt="Vue logo" class="img-thumbnail mt-3" src="../assets/logo.png">
     <HelloWorld msg="Bienvenu dans votre magasin informatique"/>
   </div>
 </template>
