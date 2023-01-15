@@ -17,11 +17,12 @@
           <router-link class="nav-link" aria-current="page" to="/myProducts">Mes produits</router-link>
         </li>
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Email" aria-label="Email">
-        <input class="form-control me-2" type="search" placeholder="Mot de passe" aria-label="Mdp">
-        <button class="btn btn-outline-success col-3" type="submit">Se connecter</button>
-      </form>
+      <div class="btn-group me-3" role="group">
+        <router-link to="/signIn"><button class="btn btn-outline-success">Se connecter</button></router-link>
+        </div>
+        <div class="btn-group" role="group">
+        <router-link to="/signUp"><button class="btn btn-outline-primary">Créer un compte</button></router-link>
+        </div>
     </div>
   </div>
 </nav>
