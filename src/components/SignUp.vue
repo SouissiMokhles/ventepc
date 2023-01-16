@@ -3,24 +3,44 @@
     <div class="row justify-content-md-center">
       <form class="row g-3 col-6" @submit.prevent="registerUser()">
         <div class="col-md-6">
-          <label for="inputName" class="form-label">Nom</label>
-          <input type="text" class="form-control" id="inputName" />
+          <label for="inputName" class="form-label">Prénom</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputName"
+            v-model="user.name"
+          />
         </div>
         <div class="col-md-6">
-          <label for="inputFamName" class="form-label">Prénom</label>
-          <input type="text" class="form-control" id="inputFamName" />
+          <label for="inputFamName" class="form-label">Nom</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputFamName"
+            v-model="user.famName"
+          />
         </div>
         <div class="col-12">
           <label for="inputEmail" class="form-label">Email</label>
-          <input type="email" class="form-control" id="inputEmail" />
+          <input
+            type="email"
+            class="form-control"
+            id="inputEmail"
+            v-model="user.email"
+          />
         </div>
         <div class="col-12">
           <label for="inputPassword" class="form-label">Mot de passe</label>
-          <input type="password" class="form-control" id="inputPassword" />
+          <input
+            type="password"
+            class="form-control"
+            id="inputPassword"
+            v-model="user.pwd"
+          />
         </div>
         <div class="col-md-12">
           <label for="inputState" class="form-label">Type</label>
-          <select id="inputState" class="form-select">
+          <select id="inputState" class="form-select" v-model="user.type">
             <option selected>Choisir...</option>
             <option>Acheteur</option>
             <option>Vendeur</option>
@@ -49,6 +69,7 @@ export default {
         type: "",
         uid: "",
       },
+      errorMessage: "",
       ref: firebase.firestore().collection("users"),
     };
   },

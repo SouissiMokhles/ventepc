@@ -4,6 +4,6 @@
 
 <script>
 export default {
-    name:"ContactVue"
-}
+  name: "ContactVue",
+};
 </script>
