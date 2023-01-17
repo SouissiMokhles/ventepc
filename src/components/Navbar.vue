@@ -22,7 +22,7 @@
           </li>
           <li class="nav-item" v-if="user != ''">
             <router-link class="nav-link" aria-current="page" to="/myProducts"
-              >Mes produits</router-link
+              >Profil</router-link
             >
           </li>
         </ul>
