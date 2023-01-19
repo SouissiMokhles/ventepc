@@ -4,7 +4,7 @@
       <div class="card-header">
         Nom de l'utilisateur
         <div class="btn-group float-end">
-        <button class="btn btn-primary btn-sm">configuration</button>
+          <button class="btn btn-primary btn-sm">configuration</button>
         </div>
       </div>
       <div class="card-body">
@@ -142,8 +142,78 @@
 </template>
 
 <script>
+import firebase from "../Firebase";
 export default {
   name: "MyProducts",
+  data() {
+    return {
+      product: {
+        name: "",
+        description: "",
+        price: 0,
+        vendor: "",
+        image: "",
+        uid: localStorage.getItem("uid"),
+      },
+      productData: {
+        name: "",
+        description: "",
+        price: 0,
+        vendor: "",
+        image: "",
+        key: "",
+      },
+      uploadValue: 0,
+      picture: null,
+      imageData: null,
+      imageName: "",
+
+      updateMessage: "",
+      ref: firebase.firestore().collection("products"),
+      successMessage: "",
+      myProducts: [],
+      uid: localStorage.getItem("uid"),
+    };
+  },
+  methods: {
+    addProduct() {
+      this.picture = null;
+      const storageRef = firebase
+        .storage()
+        .ref(`images/${this.imageName}`)
+        .put(this.imageData);
+      storageRef.on(
+        `state_changed`,
+        (snapshot) => {
+          this.uploadValue =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        },
+        (error) => {
+          console.log(error.message);
+        },
+        () => {
+          this.uploadValue = 100;
+          storageRef.snapshot.ref.getDownloadURL().then((url) => {
+            console.log("URL: ", url);
+            this.product.image = url;
+            this.ref
+              .add(this.product)
+              .then(() => {
+                this.successMessage = "Ajouté";
+              })
+              .then(() => {
+                this.product.name = "";
+                this.product.description = "";
+                this.product.price = "";
+                this.product.vendor = "";
+                this.product.image = "";
+              });
+          });
+        }
+      );
+    },
+    //here i stoped
+  },
 };
 </script>
 
