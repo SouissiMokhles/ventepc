@@ -11,51 +11,34 @@
         <h5 class="card-title float-start">Vos Produits</h5>
       </div>
       <div class="row ms-1">
-        <div class="col-4">
+        <div class="col-4" v-for="item in MyProducts" :key="item.key">
           <div class="card mb-3" style="max-width: 540px">
             <div class="row g-0">
               <div class="col-4">
-                <img class="img-fluid rounded-start" alt="..." />
+                <img
+                  src="item.image"
+                  class="img-fluid rounded-start"
+                  alt="Image du produit"
+                />
               </div>
               <div class="col-8">
                 <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
+                  <h5 class="card-title">{{ item.name }}</h5>
                   <p class="card-text">
-                    This is a wider card with supporting text below as a natural
-                    lead-in to additional content. This content is a little bit
-                    longer.
+                    {{ item.description }}
                   </p>
                   <p class="card-text">
-                    <small class="text-muted">Last updated 3 mins ago</small>
+                    <small class="text-muted">{{ item.price }}</small>
+                  </p>
+                  <p class="card-text">
+                    <small class="text-muted">{{ item.vendor }}</small>
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-4">
-          <div class="card mb-3" style="max-width: 540px">
-            <div class="row g-0">
-              <div class="col-md-4">
-                <img class="img-fluid rounded-start" alt="..." />
-              </div>
-              <div class="col-8">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">
-                    This is a wider card with supporting text below as a natural
-                    lead-in to additional content. This content is a little bit
-                    longer.
-                  </p>
-                  <p class="card-text">
-                    <small class="text-muted">Last updated 3 mins ago</small>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-3 align-self-center">
+        <div class="col-3 mb-3 align-self-center">
           <button
             class="btn btn-primary rounded-btn"
             data-bs-toggle="modal"
@@ -89,7 +72,7 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form @submit.prevent="addProduct()">
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label"
                   >Nom du produit</label
@@ -99,13 +82,37 @@
                   class="form-control"
                   id="exampleInputEmail1"
                   aria-describedby="emailHelp"
+                  v-model="product.name"
+                  required
                 />
               </div>
               <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label"
                   >Description</label
                 >
-                <textarea class="form-control" id="exampleInputPassword1" />
+                <textarea
+                  class="form-control"
+                  id="exampleInputPassword1"
+                  v-model="product.description"
+                  required
+                />
+                <div class="input-group mb-3">
+                  <input
+                    type="file"
+                    accept=".jpg, .png"
+                    class="form-control mt-3"
+                    @change="previewImage()"
+                    required
+                    id="inputGroupFile02"
+                  />
+                  <label class="input-group-text mt-3" for="inputGroupFile02"
+                    >Upload</label
+                  >
+                </div>
+                <progress id="js-progressbar" class="uk-progress" :value="uploadValue" max="100"></progress>
+              <div class="alert alert-success mt-3" role="alert" v-if="messageUpdate">
+                {{updateMessage}}
+              </div>
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label"
                     >Prix</label
@@ -117,13 +124,17 @@
                         class="form-control"
                         id="exampleInputEmail1"
                         aria-describedby="emailHelp"
+                        v-model="product.price"
+                        required
                       />
                       <span class="input-group-text">DT</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary">Ajouter</button>
+              <button type="submit" class="btn btn-primary mt-3">
+                Ajouter
+              </button>
             </form>
           </div>
           <div class="modal-footer">
@@ -212,7 +223,55 @@ export default {
         }
       );
     },
-    //here i stoped
+    getData(name, description, price, vendor, image, key) {
+      this.productData.name = name;
+      this.productData.description = description;
+      this.productData.price = price;
+      this.productData.vendor = vendor;
+      this.productData.image = image;
+      this.productData.key = key;
+    },
+    upload() {
+      console.log("KEY: ", this.productData.key);
+      this.ref
+        .doc(this.productData.key)
+        .update({
+          name: this.productData.name,
+          description: this.productData.description,
+          price: this.productData.price,
+          vendor: this.productData.vendor,
+          image: this.productData.image,
+        })
+        .then(() => {
+          this.updateMessage("Mis a jour");
+        });
+    },
+    deleteProduct(key) {
+      this.ref.doc(key).delete();
+    },
+    previewImage(event) {
+      this.uploadValue = 0;
+      this.picture = null;
+      this.imageData = event.target.files[0];
+      this.imageName = event.target.files[0].name;
+    },
+  },
+  created() {
+    this.ref.onSnapshot((query) => {
+      this.myProducts = [];
+      query.forEach((doc) => {
+        if (localStorage.getItem("uid") == doc.data().uid) {
+          this.myProducts.push({
+            key: doc.id,
+            name: doc.data().name,
+            description: doc.data().description,
+            price: doc.data().price,
+            vendor: doc.data().vendor,
+            image: doc.data().image,
+          });
+        }
+      });
+    });
   },
 };
 </script>
