@@ -70,7 +70,7 @@ export default {
         .then(() => {
           firebase.auth().onAuthStateChanged(() => {
             localStorage.removeItem("uid");
-            router.push({ name: "home" });
+            router.push({ name: "signIn" });
           });
         });
     },

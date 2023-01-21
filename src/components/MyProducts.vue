@@ -11,7 +11,7 @@
         <h5 class="card-title float-start">Vos Produits</h5>
       </div>
       <div class="row ms-1">
-        <div class="col-4" v-for="item in MyProducts" :key="item.key">
+        <div class="col-4" v-for="item in myProducts" :key="item.key">
           <div class="card mb-3" style="max-width: 540px">
             <div class="row g-0">
               <div class="col-4">
@@ -110,7 +110,7 @@
                   >
                 </div>
                 <progress id="js-progressbar" class="uk-progress" :value="uploadValue" max="100"></progress>
-              <div class="alert alert-success mt-3" role="alert" v-if="messageUpdate">
+              <div class="alert alert-success mt-3" role="alert" v-if="updateMessage">
                 {{updateMessage}}
               </div>
                 <div class="mb-3">
