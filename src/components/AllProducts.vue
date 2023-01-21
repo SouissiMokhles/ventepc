@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col-3 ms-3" v-for="item in products" :key="item.key">
         <div class="card" style="width: 18rem">
-          <img src="item.image" class="card-img-top" alt="product" />
+          <img :src="item.image" class="card-img-top" alt="product" />
           <div class="card-body">
             <h5 class="card-title">{{ item.name }}</h5>
             <p class="card-text">
@@ -13,7 +13,7 @@
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">{{ item.price }}</li>
-            <li class="list-group-item">{{ item.vondor }}</li>
+            <li class="list-group-item"></li>
           </ul>
           <div class="card-body"></div>
         </div>
@@ -33,6 +33,7 @@ export default {
     };
   },
   created() {
+
     this.ref.onSnapshot((query) => {
       this.products = [];
       query.forEach((doc) => {

@@ -1,8 +1,8 @@
 <template>
   <div class="myProducts">
     <div class="card text-center m-1">
-      <div class="card-header">
-        Nom de l'utilisateur
+      <div class="card-header" v-for="name in userName" :key="name.userName">
+        {{name.userName}}
         <div class="btn-group float-end">
           <button class="btn btn-primary btn-sm">configuration</button>
         </div>
@@ -16,7 +16,7 @@
             <div class="row g-0">
               <div class="col-4">
                 <img
-                  src="item.image"
+                  :src="item.image"
                   class="img-fluid rounded-start"
                   alt="Image du produit"
                 />
@@ -28,10 +28,32 @@
                     {{ item.description }}
                   </p>
                   <p class="card-text">
-                    <small class="text-muted">{{ item.price }}</small>
+                    <small class="text-muted">{{ item.price }} DT</small>
                   </p>
                   <p class="card-text">
                     <small class="text-muted">{{ item.vendor }}</small>
+                    <button
+                      class="btn btn-danger"
+                      v-on:click="deleteProduct(item.key)"
+                    >
+                      Supprimer
+                    </button>
+                    <button
+                      class="btn btn-info ms-3"
+                      data-bs-toggle="modal"
+                      data-bs-target="#update"
+                      v-on:click="
+                        getData(
+                          item.name,
+                          item.description,
+                          item.price,
+                          item.image,
+                          item.key
+                        )
+                      "
+                    >
+                      Mettre a jour
+                    </button>
                   </p>
                 </div>
               </div>
@@ -42,16 +64,22 @@
           <button
             class="btn btn-primary rounded-btn"
             data-bs-toggle="modal"
-            data-bs-target="#staticBackdrop"
+            data-bs-target="#add"
           >
             +
           </button>
         </div>
       </div>
     </div>
+    <div class="alert alert-success mt-3" role="alert" v-if="updateMessage">
+      {{ updateMessage }}
+    </div>
+    <div class="alert alert-success mt-3" role="alert" v-if="updateMessage">
+      {{ updateMessage }}
+    </div>
     <div
       class="modal fade"
-      id="staticBackdrop"
+      id="add"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
       tabindex="-1"
@@ -72,7 +100,7 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form @submit.prevent="addProduct()">
+            <form @submit.prevent="addProduct">
               <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label"
                   >Nom du produit</label
@@ -101,7 +129,7 @@
                     type="file"
                     accept=".jpg, .png"
                     class="form-control mt-3"
-                    @change="previewImage()"
+                    @change="previewImage"
                     required
                     id="inputGroupFile02"
                   />
@@ -109,10 +137,6 @@
                     >Upload</label
                   >
                 </div>
-                <progress id="js-progressbar" class="uk-progress" :value="uploadValue" max="100"></progress>
-              <div class="alert alert-success mt-3" role="alert" v-if="updateMessage">
-                {{updateMessage}}
-              </div>
                 <div class="mb-3">
                   <label for="exampleInputEmail1" class="form-label"
                     >Prix</label
@@ -132,7 +156,98 @@
                   </div>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary mt-3">
+              <button
+                type="submit"
+                class="btn btn-primary mt-3"
+                data-bs-dismiss="modal"
+              >
+                Ajouter
+              </button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="update"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Modfier le produit
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="update">
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label"
+                  >Nom du produit</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="exampleInputEmail1"
+                  v-model="productData.name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label"
+                  >Description</label
+                >
+                <textarea
+                  class="form-control"
+                  id="exampleInputPassword1"
+                  v-model="productData.description"
+                  required
+                />
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label"
+                    >Prix</label
+                  >
+                  <div class="col-4 offset-4">
+                    <div class="input-group">
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="exampleInputEmail1"
+                        aria-describedby="emailHelp"
+                        v-model="productData.price"
+                        required
+                      />
+                      <span class="input-group-text">DT</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary mt-3"
+                data-bs-dismiss="modal"
+              >
                 Ajouter
               </button>
             </form>
@@ -181,8 +296,10 @@ export default {
 
       updateMessage: "",
       ref: firebase.firestore().collection("products"),
+      userRef: firebase.firestore().collection("users"),
       successMessage: "",
       myProducts: [],
+      userName:[],
       uid: localStorage.getItem("uid"),
     };
   },
@@ -210,7 +327,7 @@ export default {
             this.ref
               .add(this.product)
               .then(() => {
-                this.successMessage = "Ajouté";
+                this.successMessage = "Produit jouté";
               })
               .then(() => {
                 this.product.name = "";
@@ -223,15 +340,14 @@ export default {
         }
       );
     },
-    getData(name, description, price, vendor, image, key) {
+    getData(name, description, price, image, key) {
       this.productData.name = name;
       this.productData.description = description;
       this.productData.price = price;
-      this.productData.vendor = vendor;
       this.productData.image = image;
       this.productData.key = key;
     },
-    upload() {
+    update() {
       console.log("KEY: ", this.productData.key);
       this.ref
         .doc(this.productData.key)
@@ -257,6 +373,16 @@ export default {
     },
   },
   created() {
+    this.userRef.onSnapshot((query) => {
+      this.userName=[]
+      query.forEach((doc)=>{
+        if(localStorage.getItem("uid") == doc.data().uid){
+          this.userName.push({
+            userName: doc.data().name
+          })
+        }
+      })
+    })
     this.ref.onSnapshot((query) => {
       this.myProducts = [];
       query.forEach((doc) => {
