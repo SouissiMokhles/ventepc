@@ -1,14 +1,16 @@
 <template>
   <div class="myProducts">
     <div class="card text-center m-1">
-      <div class="card-header" v-for="name in userName" :key="name.userName">
+      <div class="card-header" v-for="name in userName" :key="name.key">
         {{ name.famName }} {{ name.name }}
         <div class="btn-group float-end">
           <button
             class="btn btn-primary btn-sm"
             data-bs-toggle="modal"
             data-bs-target="#config"
-            v-on:click="getUserData(name.name, name.famName, name.email)"
+            v-on:click="
+              getUserData(name.name, name.famName, name.email, name.key)
+            "
           >
             configuration
           </button>
@@ -456,7 +458,6 @@ export default {
       this.userData.key = key;
     },
     updateUser() {
-      console.log("User Doc: ", this.userData.key)
       this.userRef.doc(this.userData.key).update({
         name: this.userData.name,
         famName: this.userData.famName,
@@ -496,6 +497,7 @@ export default {
       query.forEach((doc) => {
         if (localStorage.getItem("uid") == doc.data().uid) {
           this.userName.push({
+            key: doc.id,
             name: doc.data().name,
             famName: doc.data().famName,
             email: doc.data().email,
