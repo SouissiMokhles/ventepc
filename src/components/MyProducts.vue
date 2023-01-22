@@ -327,7 +327,13 @@
               </div>
               <div class="mb-3">
                 <label for="psw" class="form-label">Mot de passe</label>
-                <input type="password" class="form-control" id="psw" required />
+                <input
+                  type="password"
+                  class="form-control"
+                  id="psw"
+                  v-model="userData.psw"
+                  required
+                />
               </div>
               <button
                 type="submit"
@@ -379,6 +385,8 @@ export default {
         name: "",
         famName: "",
         email: "",
+        psw: "",
+        key: "",
         uid: "",
       },
       uploadValue: 0,
@@ -440,14 +448,16 @@ export default {
       this.productData.image = image;
       this.productData.key = key;
     },
-    getUserData(name, famName, email, uid) {
+    getUserData(name, famName, email, uid, key) {
       this.userData.name = name;
       this.userData.famName = famName;
       this.userData.email = email;
       this.userData.uid = uid;
+      this.userData.key = key;
     },
     updateUser() {
-      this.userRef.doc(this.userData.uid).update({
+      console.log("User Doc: ", this.userData.key)
+      this.userRef.doc(this.userData.key).update({
         name: this.userData.name,
         famName: this.userData.famName,
         email: this.userData.email,
