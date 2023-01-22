@@ -12,7 +12,7 @@
             </p>
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">{{ item.price }}</li>
+            <li class="list-group-item">{{ item.price }} DT</li>
             <li class="list-group-item"></li>
           </ul>
           <div class="card-body" v-for="name in vendor" v-bind:key="name.key">{{ name.name }}</div>
@@ -37,7 +37,7 @@ export default {
     };
   },
   created() {
-    this.vendorRef.where("uid","==", firebase.firestore().collection("products").doc("uid")).
+    this.vendorRef.
     onSnapshot((query) => {
       this.vendor = [];
       query.forEach((doc) => {
