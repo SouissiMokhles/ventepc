@@ -2,9 +2,16 @@
   <div class="myProducts">
     <div class="card text-center m-1">
       <div class="card-header" v-for="name in userName" :key="name.userName">
-        {{name.userName}}
+        {{ name.famName }} {{ name.name }}
         <div class="btn-group float-end">
-          <button class="btn btn-primary btn-sm">configuration</button>
+          <button
+            class="btn btn-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#config"
+            v-on:click="getUserData(name.name, name.famName, name.email)"
+          >
+            configuration
+          </button>
         </div>
       </div>
       <div class="card-body">
@@ -264,6 +271,85 @@
         </div>
       </div>
     </div>
+    <div
+      class="modal fade"
+      id="config"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="staticBackdropLabel">
+              Configuration du compte
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="updateUser">
+              <div class="mb-3">
+                <label for="Name" class="form-label">Prénom</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Name"
+                  v-model="userData.name"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="famName" class="form-label">Nom</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="famName"
+                  v-model="userData.famName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="exampleInputEmail1"
+                  v-model="userData.email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="psw" class="form-label">Mot de passe</label>
+                <input type="password" class="form-control" id="psw" required />
+              </div>
+              <button
+                type="submit"
+                class="btn btn-primary mt-3"
+                data-bs-dismiss="modal"
+              >
+                Modfier
+              </button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -289,6 +375,12 @@ export default {
         image: "",
         key: "",
       },
+      userData: {
+        name: "",
+        famName: "",
+        email: "",
+        uid: "",
+      },
       uploadValue: 0,
       picture: null,
       imageData: null,
@@ -297,9 +389,10 @@ export default {
       updateMessage: "",
       ref: firebase.firestore().collection("products"),
       userRef: firebase.firestore().collection("users"),
+      userAuth: firebase.auth().currentUser,
       successMessage: "",
       myProducts: [],
-      userName:[],
+      userName: [],
       uid: localStorage.getItem("uid"),
     };
   },
@@ -347,6 +440,21 @@ export default {
       this.productData.image = image;
       this.productData.key = key;
     },
+    getUserData(name, famName, email, uid) {
+      this.userData.name = name;
+      this.userData.famName = famName;
+      this.userData.email = email;
+      this.userData.uid = uid;
+    },
+    updateUser() {
+      this.userRef.doc(this.userData.uid).update({
+        name: this.userData.name,
+        famName: this.userData.famName,
+        email: this.userData.email,
+      });
+      this.userAuth.updateEmail(this.userData.email);
+      this.userAuth.updatePassword(this.userData.psw);
+    },
     update() {
       console.log("KEY: ", this.productData.key);
       this.ref
@@ -374,15 +482,17 @@ export default {
   },
   created() {
     this.userRef.onSnapshot((query) => {
-      this.userName=[]
-      query.forEach((doc)=>{
-        if(localStorage.getItem("uid") == doc.data().uid){
+      this.userName = [];
+      query.forEach((doc) => {
+        if (localStorage.getItem("uid") == doc.data().uid) {
           this.userName.push({
-            userName: doc.data().name
-          })
+            name: doc.data().name,
+            famName: doc.data().famName,
+            email: doc.data().email,
+          });
         }
-      })
-    })
+      });
+    });
     this.ref.onSnapshot((query) => {
       this.myProducts = [];
       query.forEach((doc) => {
