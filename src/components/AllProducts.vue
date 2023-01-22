@@ -15,7 +15,7 @@
             <li class="list-group-item">{{ item.price }}</li>
             <li class="list-group-item"></li>
           </ul>
-          <div class="card-body"></div>
+          <div class="card-body" v-for="name in vendor" v-bind:key="name.key">{{ name.name }}</div>
         </div>
       </div>
     </div>
@@ -29,10 +29,24 @@ export default {
   data() {
     return {
       products: [],
+      vendor: [],
       ref: firebase.firestore().collection("products"),
+      vendorRef: firebase
+        .firestore()
+        .collection("users")
     };
   },
   created() {
+    this.vendorRef.where("uid","==", firebase.firestore().collection("products").doc("uid")).
+    onSnapshot((query) => {
+      this.vendor = [];
+      query.forEach((doc) => {
+        this.vendor.push({
+          vendor: doc.data().name,
+        });
+        console.log(doc.data());
+      });
+    });
 
     this.ref.onSnapshot((query) => {
       this.products = [];
@@ -42,7 +56,7 @@ export default {
           name: doc.data().name,
           description: doc.data().description,
           price: doc.data().price,
-          vendor: doc.data().vondor,
+          vendor: doc.data().vendor,
           image: doc.data().image,
         });
       });
