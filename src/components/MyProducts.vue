@@ -458,11 +458,12 @@ export default {
       this.userData.key = key;
     },
     updateUser() {
+      console.log("user key: ", this.userData.key);
       this.userRef.doc(this.userData.key).update({
         name: this.userData.name,
         famName: this.userData.famName,
         email: this.userData.email,
-      });
+      })
       this.userAuth.updateEmail(this.userData.email);
       this.userAuth.updatePassword(this.userData.psw);
     },
