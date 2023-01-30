@@ -49,7 +49,7 @@ export default {
         .signInWithEmailAndPassword(this.user.email, this.user.pwd)
         .then((userData) => {
           localStorage.setItem("uid", userData.user.uid);
-          router.push({ name: "home" });
+          router.push({ name: "allProducts" });
         })
         .catch(() => {
           this.errorMessage = "Email et mot de passe non valide";

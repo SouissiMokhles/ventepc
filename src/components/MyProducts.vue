@@ -463,15 +463,19 @@ export default {
       this.userData.uid = uid;
       this.userData.key = key;
     },
-    updateUser() {
-      this.userAuth.updateEmail(this.userData.email);
-      this.userAuth.updatePassword(this.userData.psw);
-      console.log("user key: ", this.userData.key);
-      this.userRef.doc(this.userData.key).update({
-        name: this.userData.name,
-        famName: this.userData.famName,
-        email: this.userData.email,
-      });
+    async updateUser() {
+      try {
+        await this.userAuth.updateEmail(this.userData.email);
+        await this.userAuth.updatePassword(this.userData.psw);
+        await this.userRef.doc(this.userData.key).update({
+          name: this.userData.name,
+          famName: this.userData.famName,
+          email: this.userData.email,
+        });
+        console.log("UserProfile update successful");
+      } catch (error) {
+        console.error(error);
+      }
     },
     update() {
       console.log("KEY: ", this.productData.key);

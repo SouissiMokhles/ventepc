@@ -86,7 +86,7 @@ export default {
             type: this.user.type,
             uid: userData.user.uid,
           });
-          router.push({ name: "home" });
+          router.push({ name: "allProducts" });
         });
     },
   },
