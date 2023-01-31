@@ -8,14 +8,13 @@
           <div class="card-body">
             <h5 class="card-title">{{ item.name }}</h5>
             <p class="card-text">
-              {{ item.description }}
+             Description: {{ item.description }}
             </p>
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">{{ item.price }}</li>
-            <li class="list-group-item"></li>
+            <li class="list-group-item">Prix: {{ item.price }} DT</li>
+            <li class="list-group-item">Contact du vendeur: {{ item.vendor }}</li>
           </ul>
-          <div class="card-body" v-for="name in vendor" v-bind:key="name.key">{{ name.name }}</div>
         </div>
       </div>
     </div>
@@ -37,16 +36,6 @@ export default {
     };
   },
   created() {
-    this.vendorRef.where("uid","==", firebase.firestore().collection("products").doc("uid")).
-    onSnapshot((query) => {
-      this.vendor = [];
-      query.forEach((doc) => {
-        this.vendor.push({
-          vendor: doc.data().name,
-        });
-        console.log(doc.data());
-      });
-    });
 
     this.ref.onSnapshot((query) => {
       this.products = [];

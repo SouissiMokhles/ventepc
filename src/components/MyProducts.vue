@@ -46,7 +46,6 @@
                     <small class="text-muted">{{ item.price }} DT</small>
                   </p>
                   <p class="card-text">
-                    <small class="text-muted">{{ item.vendor }}</small>
                     <button
                       class="btn btn-danger"
                       v-on:click="deleteProduct(item.key)"
@@ -434,7 +433,8 @@ export default {
             console.log("URL: ", url);
             this.product.image = url;
             this.ref
-              .add(this.product)
+              .add(this.product,
+              this.product.vendor= this.userAuth.email)
               .then(() => {
                 this.successMessage = "Produit jouté";
               })
