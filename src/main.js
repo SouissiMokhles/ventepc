@@ -8,6 +8,15 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap.js";
 
 Vue.config.productionTip = false;
+let currenRoute
+
+router.beforeEach((to, from, next)=>{
+  if (to.path === currenRoute){
+    return
+  }
+  currenRoute = to.path
+  next()
+})
 
 new Vue({
   router,
