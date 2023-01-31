@@ -60,8 +60,9 @@ export default {
   data() {
     return {
       user: null,
-      userType: "",
-      userRef: firebase.firestore().collection("users"),
+      userType: null,
+      userAuth: firebase.firestore().collection("users"),
+      currUser: firebase.auth().currentUser,
     };
   },
   methods: {
@@ -72,7 +73,7 @@ export default {
         .then(() => {
           firebase.auth().onAuthStateChanged(() => {
             localStorage.removeItem("uid");
-              router.push({ name: "home" });
+            router.push({ name: "signIn" });
           });
         });
     },
@@ -81,6 +82,15 @@ export default {
     firebase.auth().onAuthStateChanged((authUser) => {
       if (authUser) {
         this.user = authUser;
+        this.userAuth
+          .where(this.user.uid, "==", this.currUser.uid)
+          .onSnapshot((query) => {
+            this.userType=""
+            query.forEach((doc) => {
+              this.userType= doc.data().type
+              console.log("type: ", this.userType);
+            })
+          })
       } else {
         this.user = "";
       }
