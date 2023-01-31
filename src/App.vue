@@ -26,10 +26,12 @@ export default {
 
 <style>
 #app {
+  background: linear-gradient(to right, #130091, #585378);
+  height: 100vh;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #b2d5f3;
 }
 </style>

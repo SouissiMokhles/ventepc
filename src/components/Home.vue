@@ -14,8 +14,5 @@
 <script>
 export default {
   name: "HomeVue",
-  props: {
-    msg: String,
-  },
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="allProducts">
-    <h1>Touts les produits</h1>
-    <div class="row">
+    <h4>Touts les produits</h4>
+    <div class="row mt-3">
       <div class="col-3 ms-3" v-for="item in products" :key="item.key">
         <div class="card" style="width: 18rem">
           <img :src="item.image" class="card-img-top" alt="product" />
