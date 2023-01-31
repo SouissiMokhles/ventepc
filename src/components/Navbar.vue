@@ -78,12 +78,12 @@ export default {
     },
   },
   created() {
-        this.userRef
-      .doc(firebase.auth().currentUser.uid)
-      .get()
-      .then((doc) => {
-        this.userType = doc.data().type;
-      });
+    this.userRef.onSnapshot((query) => {
+      this.userType = null
+      query.forEach((doc) => {
+        this.userType = doc.data().type
+      })
+    })
     firebase.auth().onAuthStateChanged((authUser) => {
       if (authUser) {
         this.user = authUser;
