@@ -49,9 +49,7 @@ export default {
         .signInWithEmailAndPassword(this.user.email, this.user.pwd)
         .then((userData) => {
           localStorage.setItem("uid", userData.user.uid);
-          if (this.$route.path !== "/allProducts") {
             router.push({ name: "allProducts" });
-          }
         })
         .catch(() => {
           this.errorMessage = "Email et mot de passe non valide";

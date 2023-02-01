@@ -20,7 +20,7 @@
               >Acceuil</router-link
             >
           </li>
-          <li class="nav-item" v-if="user != ''">
+          <li class="nav-item" v-if="user != '' && userType =='Vendeur'">
             <router-link class="nav-link" aria-current="page" to="/myProducts"
               >Profil</router-link
             >
@@ -73,24 +73,23 @@ export default {
         .then(() => {
           firebase.auth().onAuthStateChanged(() => {
             localStorage.removeItem("uid");
-            router.push({ name: "signIn" });
+            router.push({ name: "home" });
           });
         });
     },
   },
   created() {
+
     firebase.auth().onAuthStateChanged((authUser) => {
       if (authUser) {
         this.user = authUser;
-        this.userAuth
-          .where(this.user.uid, "==", this.currUser.uid)
-          .onSnapshot((query) => {
-            this.userType=""
-            query.forEach((doc) => {
-              this.userType= doc.data().type
-              console.log("type: ", this.userType);
-            })
+        this.userAuth.where("email","==",this.user.email).onSnapshot((query) =>{
+          this.userType=""
+          query.forEach(doc => {
+            this.userType=doc.data().type
+            console.log(this.userType);
           })
+        })
       } else {
         this.user = "";
       }

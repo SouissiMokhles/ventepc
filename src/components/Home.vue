@@ -4,9 +4,9 @@
     <router-link to="/signIn"
       ><button class="btn btn-success" v-if="user ==''">Se connecter</button></router-link
     >
-    <p>
+    <p v-if="user == ''">
       Vous n'avez pas un compte?
-      <router-link to="/signUp" v-if="user == ''">Crée un compte</router-link>
+      <router-link to="/signUp">Crée un compte</router-link>
     </p>
   </div>
 </template>
