@@ -58,7 +58,6 @@ export default {
         famName: "",
         email: "",
         pwd: "",
-        type: "",
         uid: "",
       },
       errorMessage: "",
@@ -75,10 +74,9 @@ export default {
             name: this.user.name,
             famName: this.user.famName,
             email: this.user.email,
-            type: this.user.type,
             uid: userData.user.uid,
           });
-          router.push({ name: "allProducts" });
+          router.push({ name: "home" });
         });
     },
   },

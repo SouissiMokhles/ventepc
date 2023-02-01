@@ -73,7 +73,9 @@ export default {
         .then(() => {
           firebase.auth().onAuthStateChanged(() => {
             localStorage.removeItem("uid");
+            if (this.$route.path !== "/") {
             router.push({ name: "home" });
+            }
           });
         });
     },

@@ -6,21 +6,10 @@
 </template>
 
 <script>
-import firebase from "./Firebase.js";
 import Navbar from "./components/Navbar.vue";
 export default {
   name: "AppVue",
   components: { Navbar },
-  afterDestroyed() {
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        firebase.auth().onAuthStateChanged(() => {
-          localStorage.clear();
-        });
-      });
-  },
 };
 </script>
 
