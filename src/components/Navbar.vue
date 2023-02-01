@@ -20,7 +20,7 @@
               >Acceuil</router-link
             >
           </li>
-          <li class="nav-item" v-if="user != '' && userType =='Vendeur'">
+          <li class="nav-item" v-if="user != ''">
             <router-link class="nav-link" aria-current="page" to="/myProducts"
               >Profil</router-link
             >
@@ -78,18 +78,10 @@ export default {
         });
     },
   },
-  created() {
-
+  beforeCreate() {
     firebase.auth().onAuthStateChanged((authUser) => {
       if (authUser) {
         this.user = authUser;
-        this.userAuth.where("email","==",this.user.email).onSnapshot((query) =>{
-          this.userType=""
-          query.forEach(doc => {
-            this.userType=doc.data().type
-            console.log(this.userType);
-          })
-        })
       } else {
         this.user = "";
       }

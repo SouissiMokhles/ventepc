@@ -38,14 +38,6 @@
             v-model="user.pwd"
           />
         </div>
-        <div class="col-md-12">
-          <label for="inputState" class="form-label">Type</label>
-          <select id="inputState" class="form-select" v-model="user.type">
-            <option selected>Choisir...</option>
-            <option>Acheteur</option>
-            <option>Vendeur</option>
-          </select>
-        </div>
         <div class="col-12">
           <button type="submit" class="btn btn-primary">Créer un compte</button>
         </div>
